@@ -53,7 +53,6 @@ LEFT JOIN tokens.nft t ON t.contract_address = lhu.contract_address AND t.blockc
 -- limit 1
 
 
-
 with 
     --We need to order by block_number and evt_index to get the last transfer of the single token (the current person owning it)
     last_held as (
@@ -91,10 +90,9 @@ SELECT
     lhu.token_id, 
     lhu.contract_address, 
     case 
-        when tx."from" <> {{address}} 
-            then 0
-        when lhu."from" = 0x0000000000000000000000000000000000000000
-            then ta.total_amount/ta.n_items
+        when tx."from" <> {{address}} and tx."to" = 0x000000000000ad05ccc4f10045630fb830b95127 then td.amount_original
+        when tx."from" <> {{address}} then 0
+        when lhu."from" = 0x0000000000000000000000000000000000000000 then ta.total_amount/ta.n_items
         else td.amount_original 
         end as acquisition_value_native, 
     case 
@@ -110,6 +108,7 @@ LEFT JOIN {{chain}}.transactions tx ON tx.hash = lhu.tx_hash
 LEFT JOIN tokens.nft t ON t.contract_address = lhu.contract_address AND t.blockchain = '{{chain}}'
 LEFT JOIN nft.trades td ON lhu.tx_hash = td.tx_hash AND lhu.contract_address = td.nft_contract_address AND CAST(lhu.token_id AS VARCHAR) = td.token_id
 LEFT JOIN total_amount ta ON ta.tx_hash = lhu.tx_hash AND ta.block_number = lhu.block_number
+
 
 
 
