@@ -98,10 +98,9 @@ SELECT
         else td.amount_original 
         end as acquisition_value_native, 
     case 
-        when tx."from" <> {{address}} 
-            then 'gifted' --if signer != receiver, that means it was airdropped/transferred 
-        when lhu."from" = 0x0000000000000000000000000000000000000000
-            then 'minted'
+        when tx."from" <> {{address}} and tx."to" = 0x000000000000ad05ccc4f10045630fb830b95127 then 'blur'
+        when tx."from" <> {{address}} then 'gifted' --if signer != receiver, that means it was airdropped/transferred 
+        when lhu."from" = 0x0000000000000000000000000000000000000000 then 'minted'
         else 'bought'
         end as acquired_how, 
     lhu.block_number as acquired_on_block_number, 
