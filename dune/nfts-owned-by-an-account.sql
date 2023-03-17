@@ -113,7 +113,15 @@ LEFT JOIN nft.trades td ON lhu.tx_hash = td.tx_hash AND lhu.contract_address = t
 LEFT JOIN total_amount ta ON ta.tx_hash = lhu.tx_hash AND ta.block_number = lhu.block_number
 
 
+
+
+
+
 select * from nft.transfers where tx_hash = 0x1a9f51fa4c46c31b6aefe0d69002122a002405f23a1690e74e5537ba89b1f6aa
+
+
+
+
 
 with total_amount as (
     select 
